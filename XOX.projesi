@@ -1,0 +1,884 @@
+#include<stdio.h>
+#include<conio.h>
+#include<locale.h>
+#include<stdlib.h>
+#include<time.h>
+
+
+
+char square[28] = { 'o', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'k', 'l', 'm', 'n', 'w', 'p', 'r',
+'s', 't', 'v', 'u', 'y', '1', 'ö', 'z', 'x','i', 'ç', 'q' };
+
+int checkwin(int);
+int checkwin2(int);
+void board();
+void board2();
+
+int main()
+{
+
+	setlocale(LC_ALL, "Turkish");
+
+	int oyuncu = 1, i;
+	int puanx = 0;
+	int puano = 0;
+	char secim;
+	char secim2;
+	char B;
+	char k;
+	char K;
+	char Z;
+	char z;
+	char mark;
+	char choice;
+
+	time_t start, end;
+	time(&start);
+
+	system("color 56");
+	printf("\n\n\tXOX oyununa hoşgeldiniz !! Oyunumuz 3x9 ve 3x6' lık dikdörtgen alanların  içlerindeki 'harfsel'\n");
+	printf("\tkoordinatların klavyeden girilerek 'x' ve 'o' oyuncu hamlelerinin yapılmasıyla oynanır. Oyuncular son\n");
+	printf("\tderece dikkatli olmalıdır. Keza ilk hangi oyuncu üç kez arka arkaya çapraz, dikey ya da yatay 'x' veya\n");
+	printf("\t'o' karakterini biraraya getirebilirse o oyuncu kazanır. Bol şanslar !! :>:>\n");
+	printf("\t\t\t  \n\n\n\n\n\n\n\n\n\n\n\n");
+	printf("\t\t\t\t\t\t\t _\n");
+	printf("\t\t\t\t\t\t\\/\t| |\t\\/\n");
+	printf("\t\t\t\t\t\t/\\\t|_|\t/\\\n");
+	printf("\t\t\t\n\n\n\n\n\n");
+	printf("\t\t\t\t\t Başlatmak için 'B' ye basınız:");
+	scanf_s("%c", &secim);
+
+	while (secim == 'B') {
+
+		printf("\t\t\t\t\n\n\n\n");
+		printf("\t\t\t\t\t__\t _\t __\t\n");
+		printf("\t\t\t\t\t /\t| |\t|_|\t|\t| |\t|/\n");
+		printf("\t\t\t\t\t/_\t|_|\t|\\\t|_\t|_|\t|\\\n");
+		printf("\t\t\t\t\t_\t_\t_\t.\t\t .\n");
+		printf("\t\t\t\t\t|_\t|_\t| \t|\t /\\/\\ \t |\n");
+		printf("\t\t\t\t\t _|\t|_\t|_\t|\t/    \\\t |\n");
+		printf("\t\t\t\t\t\t\txox\txox\n");
+		printf("\t\t\t\t\t\t\t3x6\t3x9\n");
+		printf("\t\t\t\t\t\t\t'K'\t'Z'\n\n");
+		printf("\t\t\tSeçiminizi yapmak için K\\k veya Z\\z harflerinden birini seçiniz:");
+		scanf_s("%c", &secim2);
+
+		if (secim2 == 'K' || secim2 == 'k') {
+
+			do {
+
+				board();
+				oyuncu = (oyuncu % 2) ? 1 : 2;
+
+				printf("\t\t\t\t\tOyuncu %d bir harf giriniz:  ", oyuncu);
+				scanf_s("%c", &choice);
+
+				mark = (oyuncu == 1) ? 'x' : 'o';
+
+
+				if (choice == 'a' && square[1] == 'a')
+					square[1] = mark;
+				else if (choice == 'b' && square[2] == 'b')
+					square[2] = mark;
+				else if (choice == 'c' && square[3] == 'c')
+					square[3] = mark;
+				else if (choice == 'd' && square[4] == 'd')
+					square[4] = mark;
+				else if (choice == 'e' && square[5] == 'e')
+					square[5] = mark;
+				else if (choice == 'f' && square[6] == 'f')
+					square[6] = mark;
+				else if (choice == 'g' && square[7] == 'g')
+					square[7] = mark;
+				else if (choice == 'h' && square[8] == 'h')
+					square[8] = mark;
+				else if (choice == 'k' && square[9] == 'k')
+					square[9] = mark;
+				else if (choice == 'l' && square[10] == 'l')
+					square[10] = mark;
+				else if (choice == 'm' && square[11] == 'm')
+					square[11] = mark;
+				else if (choice == 'n' && square[12] == 'n')
+					square[12] = mark;
+				else if (choice == 'w' && square[13] == 'w')
+					square[13] = mark;
+				else if (choice == 'p' && square[14] == 'p')
+					square[14] = mark;
+				else if (choice == 'r' && square[15] == 'r')
+					square[15] = mark;
+				else if (choice == 's' && square[16] == 's')
+					square[16] = mark;
+				else if (choice == 't' && square[17] == 't')
+					square[17] = mark;
+				else if (choice == 'v' && square[18] == 'v')
+					square[18] = mark;
+				else {
+
+					printf("Geçersiz hamle");
+
+					oyuncu--;
+					_getch();
+				}
+				i = checkwin(oyuncu);
+
+				oyuncu++;
+			} while (i == -1);
+
+			board();
+
+			if (i == 1) {
+				if (oyuncu == 2) {
+					printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+					printf("\t\t\t\t\t__\t__\t__\t\t__\n");
+					printf("\t\t\t\t|/\t|_|\t /\t|_|\t|\\ |\t|_|\t|\\ |\t\n");
+					printf("\t\t\t\t|\\\t| |\t/_\t| |\t| \\|\t| |\t| \\|\t\n\n");
+					printf("\t\t\t\t\t\t\t\\/\n");
+					printf("\t\t\t\t\t\t\t/\\\n\n\n\n\n\n\n\n\n\n\n\n");
+					
+				}
+				else {
+					printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+					printf("\t\t\t\t\t__\t__\t__\t\t__\n");
+					printf("\t\t\t\t|/\t|_|\t /\t|_|\t|\\ |\t|_|\t|\\ |\t\n");
+					printf("\t\t\t\t|\\\t| |\t/_\t| |\t| \\|\t| |\t| \\|\t\n\n\n");
+					printf("\t\t\t\t\t\t\t _\n");
+					printf("\t\t\t\t\t\t\t| |\n");
+					printf("\t\t\t\t\t\t\t|_|\n\n\n\n\n\n\n\n\n\n\n\n");
+					
+				}
+			}
+
+
+			_getch();
+		}
+		else if (secim2 == 'Z' || secim2 == 'z'){
+
+			do {
+				board2();
+				oyuncu = (oyuncu % 2) ? 1 : 2;
+
+				printf("\t\t\t\tOyuncu %d bir harf giriniz:  ", oyuncu);
+				scanf_s("%c", &choice);
+
+				mark = (oyuncu == 1) ? 'x' : 'o';
+
+				if (choice == 'a' && square[1] == 'a')
+					square[1] = mark;
+				else if (choice == 'b' && square[2] == 'b')
+					square[2] = mark;
+				else if (choice == 'c' && square[3] == 'c')
+					square[3] = mark;
+				else if (choice == 'd' && square[4] == 'd')
+					square[4] = mark;
+				else if (choice == 'e' && square[5] == 'e')
+					square[5] = mark;
+				else if (choice == 'f' && square[6] == 'f')
+					square[6] = mark;
+				else if (choice == 'g' && square[7] == 'g')
+					square[7] = mark;
+				else if (choice == 'h' && square[8] == 'h')
+					square[8] = mark;
+				else if (choice == 'k' && square[9] == 'k')
+					square[9] = mark;
+				else if (choice == 'l' && square[10] == 'l')
+					square[10] = mark;
+				else if (choice == 'm' && square[11] == 'm')
+					square[11] = mark;
+				else if (choice == 'n' && square[12] == 'n')
+					square[12] = mark;
+				else if (choice == 'w' && square[13] == 'w')
+					square[13] = mark;
+				else if (choice == 'p' && square[14] == 'p')
+					square[14] = mark;
+				else if (choice == 'r' && square[15] == 'r')
+					square[15] = mark;
+				else if (choice == 's' && square[16] == 's')
+					square[16] = mark;
+				else if (choice == 't' && square[17] == 't')
+					square[17] = mark;
+				else if (choice == 'v' && square[18] == 'v')
+					square[18] = mark;
+				else if (choice == 'u' && square[19] == 'u')
+					square[19] = mark;
+				else if (choice == 'y' && square[20] == 'y')
+					square[20] = mark;
+				else if (choice == 'ı' && square[21] == 'ı')
+					square[21] = mark;
+				else if (choice == 'ö' && square[22] == 'ö')
+					square[22] = mark;
+				else if (choice == 'z' && square[23] == 'z')
+					square[23] = mark;
+				else if (choice == 'x' && square[24] == 'x')
+					square[24] = mark;
+				else if (choice == 'i' && square[25] == 'i')
+					square[25] = mark;
+				else if (choice == 'ç' && square[26] == 'ç')
+					square[26] = mark;
+				else if (choice == 'q' && square[27] == 'q')
+					square[27] = mark;
+				else {
+
+					printf("Geçersiz hamle");
+
+					oyuncu--;
+					_getch();
+				}
+				i = checkwin2(oyuncu);
+
+				oyuncu++;
+			} while (i == -1);
+
+			board2();
+
+			if (i == 1) {
+				if (oyuncu == 2) {
+					printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+					printf("\t\t\t\t\t__     \t__\t__\t\t__\n");
+					printf("\t\t\t\t|/\t|_|\t /\t|_|\t|\\ |\t|_|\t|\\ |\t\n");
+					printf("\t\t\t\t|\\\t| |\t/_\t| |\t| \\|\t| |\t| \\|\t\n\n\n");
+					printf("\t\t\t\t\t\t\t\\/\n");
+					printf("\t\t\t\t\t\t\t/\\\n\n\n\n\n\n\n\n\n\n\n");
+					time (&end);
+					printf("Oyun %.2lf saniye sürdü.n", difftime (end, start));
+
+				}
+				else {
+					printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+					printf("\t\t\t\t\t__   \t__\t__\t\t__\n");
+					printf("\t\t\t\t|/\t|_|\t /\t|_|\t|\\ |\t|_|\t|\\ |\t\n");
+					printf("\t\t\t\t|\\\t| |\t/__\t| |\t| \\|\t| |\t| \\|\t\n\n\n");
+					printf("\t\t\t\t\t\t\t _\n");
+					printf("\t\t\t\t\t\t\t| |\n");
+					printf("\t\t\t\t\t\t\t|_|\n");
+					printf("\t\t\t\t\t\t\n\n\n\n\n\n\n\n\n\n\n");
+				
+				}
+			}
+
+			_getch();
+
+		}
+	}
+
+
+	return 0;
+}
+
+
+
+int checkwin(int oyuncu) {
+
+	int puano = 0;
+	int puanx = 0;
+
+	if (square[1] == square[2] && square[2] == square[3]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[4] == square[5] && square[5] == square[6]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[7] == square[8] && square[8] == square[9]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[1] == square[4] && square[4] == square[7]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[2] == square[5] && square[5] == square[8]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[3] == square[6] && square[6] == square[9]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[1] == square[5] && square[5] == square[9]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+
+	else if (square[3] == square[5] && square[5] == square[7]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[3] == square[10] && square[10] == square[11]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[3] == square[13] && square[13] == square[17]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[6] == square[13] && square[13] == square[14]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[9] == square[16] && square[16] == square[17]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[9] == square[13] && square[13] == square[11]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[10] == square[11] && square[11] == square[12]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[13] == square[14] && square[14] == square[15]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[16] == square[17] && square[17] == square[18]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[10] == square[13] && square[13] == square[16]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[11] == square[14] && square[14] == square[17]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[12] == square[15] && square[15] == square[18]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[10] == square[14] && square[14] == square[18]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[12] == square[14] && square[14] == square[16]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[8] == square[6] && square[6] == square[10]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[2] == square[6] && square[6] == square[16]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[5] == square[6] && square[6] == square[13]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[1] != 'a' && square[2] != 'b' && square[3] != 'c' && square[4] != 'd' &&
+		square[5] != 'e' && square[6] != 'f' && square[7] != 'g' && square[8] != 'h' && square[9] != 'k' &&
+		square[10] != 'l' && square[11] != 'm' && square[12] != 'n' && square[13] != 'w' && square[14] != 'p' &&
+		square[15] != 'r' && square[16] != 's' && square[17] != 't' && square[18] != 'v') {
+
+		if (puanx > puano) {
+			return 1;
+		}
+		else if (puano > puanx) {
+			return 2;
+		}
+		else if (puano == puanx) {
+			return 3;
+		}
+	}
+	else {
+
+		return -1;
+	}
+
+}
+void board()
+{
+	system("cls");
+	printf("\n\n\t\t\t\t\t\t\tXOX MEYDANI\n\n");
+
+	printf("\t\t\t\t\t\tOyuncu 1(x) - Oyuncu 2(o)\n\n\n");
+
+	printf("\t\t\t\t\t\t____|_____|_____|_____|_____|_____\n");
+	printf("\t\t\t\t\t\t    |     |     |     |     |     \n");
+	printf("\t\t\t\t\t\t %c  |  %c  |  %c  |  %c  |  %c  |  %c  \n", square[1], square[2], square[3], square[10], square[11], square[12]);
+	printf("\t\t\t\t\t\t____|_____|_____|_____|_____|_____\n");
+	printf("\t\t\t\t\t\t    |     |     |     |     |     \n");
+	printf("\t\t\t\t\t\t %c  |  %c  |  %c  |  %c  |  %c  |  %c  \n", square[4], square[5], square[6], square[13], square[14], square[15]);
+	printf("\t\t\t\t\t\t____|_____|_____|_____|_____|_____\n");
+	printf("\t\t\t\t\t\t    |     |     |     |     |     \n");
+	printf("\t\t\t\t\t\t %c  |  %c  |  %c  |  %c  |  %c  |  %c  \n", square[7], square[8], square[9], square[16], square[17], square[18]);
+	printf("\t\t\t\t\t\t____|_____|_____|_____|_____|_____\n");
+	printf("\t\t\t\t\t\t    |     |     |     |     |     \n\n\n");
+
+}
+int checkwin2(int oyuncu) {
+
+	int puano = 0;
+	int puanx = 0;
+
+	if (square[1] == square[2] && square[2] == square[3]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[4] == square[5] && square[5] == square[6]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[7] == square[8] && square[8] == square[9]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[1] == square[4] && square[4] == square[7]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[2] == square[5] && square[5] == square[8]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[3] == square[6] && square[6] == square[9]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[1] == square[5] && square[5] == square[9]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+
+	else if (square[3] == square[5] && square[5] == square[7]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[3] == square[10] && square[10] == square[11]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[3] == square[13] && square[13] == square[17]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[6] == square[13] && square[13] == square[14]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[9] == square[16] && square[16] == square[17]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[9] == square[13] && square[13] == square[11]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[10] == square[11] && square[11] == square[12]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[13] == square[14] && square[14] == square[15]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[16] == square[17] && square[17] == square[18]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[10] == square[13] && square[13] == square[16]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[11] == square[14] && square[14] == square[17]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[12] == square[15] && square[15] == square[18]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[10] == square[14] && square[14] == square[18]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[12] == square[14] && square[14] == square[16]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[12] == square[19] && square[19] == square[20]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[12] == square[22] && square[22] == square[26]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[15] == square[22] && square[22] == square[23]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[18] == square[22] && square[22] == square[20]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[18] == square[25] && square[25] == square[26]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[19] == square[20] && square[20] == square[21]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[22] == square[23] && square[23] == square[24]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[25] == square[26] && square[26] == square[27]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[19] == square[22] && square[22] == square[25]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[20] == square[23] && square[23] == square[26]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[21] == square[24] && square[24] == square[27]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[19] == square[23] && square[23] == square[27]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[21] == square[23] && square[23] == square[25]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[8] == square[6] && square[6] == square[10]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[2] == square[6] && square[6] == square[16]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[5] == square[6] && square[6] == square[13]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[14] == square[15] && square[15] == square[22]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[11] == square[15] && square[15] == square[25]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[17] == square[15] && square[15] == square[19]) {
+		if (oyuncu == 1) {
+			puanx = puanx + 1;
+		}
+		else {
+			puano = puano + 1;
+		}
+	}
+	else if (square[1] != 'a' && square[2] != 'b' && square[3] != 'c' && square[4] != 'd' &&
+		square[5] != 'e' && square[6] != 'f' && square[7] != 'g' && square[8] != 'h' && square[9] != 'k' &&
+		square[10] != 'l' && square[11] != 'm' && square[12] != 'n' && square[13] != 'w' && square[14] != 'p' &&
+		square[15] != 'r' && square[16] != 's' && square[17] != 't' && square[18] != 'v' && square[19] != 'u' && square[20] != 'y' && square[21] != 'ı' &&
+		square[22] != 'ö' && square[23] != 'z' && square[24] != 'x' && square[25] != 'i' && square[26] != 'ç' && square[27] != 'q') {
+
+		if (puanx > puano) {
+			return 1;
+		}
+		else if (puano > puanx) {
+			return 2;
+		}
+		else if (puano == puanx) {
+			return 3;
+		}
+	}
+	else {
+
+		return -1;
+	}
+
+
+}
+void board2() {
+
+	system("cls");
+	printf("\n\n\t\t\txox\n\n");
+
+	printf("Oyuncu 1(x) - Oyuncu 2(o)\n\n\n");
+
+	printf("____|_____|_____|_____|_____|_____|_____|_____|_____|____\n");
+	printf("    |     |     |     |     |     |     |     |     |\n");
+	printf(" %c  |  %c  |  %c  |  %c  |  %c  |  %c  |  %c  |  %c  |  %c  |\n", square[1], square[2], square[3], square[10], square[11], square[12], square[19], square[20], square[21]);
+	printf("____|_____|_____|_____|_____|_____|_____|_____|_____|____\n");
+	printf("    |     |     |     |     |     |     |     |     |\n");
+	printf(" %c  |  %c  |  %c  |  %c  |  %c  |  %c  |  %c  |  %c  |  %c  |\n", square[4], square[5], square[6], square[13], square[14], square[15], square[22], square[23], square[24]);
+	printf("____|_____|_____|_____|_____|_____|_____|_____|_____|____\n");
+	printf("    |     |     |     |     |     |     |     |     |\n");
+	printf(" %c  |  %c  |  %c  |  %c  |  %c  |  %c  |  %c  |  %c  |  %c  |\n", square[7], square[8], square[9], square[16], square[17], square[18], square[25], square[26], square[27]);
+	printf("____|_____|_____|_____|_____|_____|_____|_____|_____|____\n");
+	printf("    |     |     |     |     |     |     |     |     |\n");
+
+}
+
+
+
+
+
+
+
+
