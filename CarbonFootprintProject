@@ -1,0 +1,148 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+using System.Windows.Controls;
+
+
+namespace FootprintApp
+{
+    public partial class footprint : Form
+    {   public static double totalFootPrint = 0.0;
+        public footprint()
+        {
+            InitializeComponent();
+            
+           
+
+            this.comboBox1.Items.AddRange(new object[] {"SAW(Sabiha Gokcen)", "CGN(Cologne)", "BCN(Barcelona)", "SXF(Berlin)",
+                                            "CPH(Copenhagen)", "DUS(Dusseldorf)", "TLV(Tel Aviv)", "DUB(Dublin)",
+                                            "MAN(Manchester)", "ARN(Stockholm)", "AGP(Malaga)", "LCY(London)",
+                                            "NRT(Tokyo)", "CAN(Guangzhou)", "IST(Istanbul)", "CDG(Paris)",
+                                            "JFK(New York)", "ATH(Athens)", "JFK(New York)", "CMH(Colombus)",
+                                            "SVO(Moscow)", "GYD(Baku)", "AMS(Amsterdam)", "DRS(Dresden)",
+                                            "RTM(Rotterdam)", "FCO(Rome)", "MUC", "SPC(Santa Cruz De La Parma)",
+                                            "IEV(Kiev)", "BRE(Bremen)" });
+            this.comboBox2.Items.AddRange(new object[] { "CGN(Cologne)", "SAW(Sabiha Gokcen)", "SXF(Berlin)", "BCN(Barcelona)",
+                                                          "DUS(Dusseldorf)", "CPH(Copenhagen)", "DUB(Dublin)", "TLV(Tel Aviv)",
+                                                          "ARN(Stockholm)", "MAN(Manchester)","LCY(London)", "AGP(Malaga)",
+                                                          "CAN(Guangzhou)", "NRT(Tokyo)", "CDG(Paris)", "IST(Istanbul)",
+                                                           "ATH(Athens)", "JFK(New York)", "GYD(Baku)", "SVO(Moscow)",
+                                                           "DRS(Dresden)", "AMS(Amsterdam)", "FCO(Rome)", "RTM(Roterdam)",
+                                                           "SPC(Santa Cruz De La Parma)", "MUC(Munich)", "BRE(Bremen)", "IEV(Kiev)"});
+            
+        }
+
+        public string conString = "Data Source=.\\SQLEXPRESS;Initial Catalog = carbon; Integrated Security = True";
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(conString);
+            SqlDataReader sdr;
+            SqlCommand cmd;
+
+            if (this.comboBox1.SelectedItem != null  && this.comboBox2.SelectedItem != null)
+            {
+                con.Open();
+                string searchcarbon = "Select distance,fuel_burn,total_passengers,aircraft from Sayfa1 where dep_airport='" + this.comboBox1.SelectedItem.ToString() + "'" + "and arr_airport='" + this.comboBox2.SelectedItem.ToString() + "'";
+                cmd = new SqlCommand(searchcarbon, con);
+                sdr = cmd.ExecuteReader();
+
+                if (sdr.Read())
+                {
+                    double ton;
+                    label5.Text = "Distance:" + " " + sdr.GetValue(0) + "km" + "\n" + "Aircraft Fuel Burn/Journey(KG):" + " " + sdr.GetValue(1) + "\n" + "Total passengers'CO2/Journey(KG):" + " " + sdr.GetValue(2) + "\n" + "Aircraft:" + " " + sdr.GetValue(3);
+                    totalFootPrint += double.Parse(sdr.GetString(1), System.Globalization.CultureInfo.InvariantCulture) + double.Parse(sdr.GetString(2), System.Globalization.CultureInfo.InvariantCulture);
+                    label6.Text = totalFootPrint + " " + "KG" + "\n" +
+                                                   (totalFootPrint/907.18) + " " + "Tons";
+                    ton = totalFootPrint / 907.18;
+                    if (ton > 2 && ton < 4)
+                    {
+                        label7.ForeColor = Color.Green;
+                        label7.Text = "Your total travel carbon footprint is ideal to avoid" + "\n" +
+                                      "higher global temperatures. Keep going that way!";
+                    }
+                    else if (ton > 4 && ton < 16)
+                    {
+                        label7.ForeColor = Color.OrangeRed;
+                        label7.Text = "Your total travel carbon footprint is critic." + "\n" +
+                                      "Your total travel carbon footprint passes average global carbon footprint (4 tons)" + "\n" +
+                                      "Please avoid Atlantic travelling with plane as much as you can do." + "\n" +
+                                      "You can contribute to reducing the carbon footprint by choosing train or bus travels" + "\n" +
+                                      "instead of planes as much as possible and reducing air travels in international transport.";
+                    }
+                    else if (ton > 16)
+                    {
+                        label7.ForeColor = Color.Red;
+                        label7.Text = "Your total travel carbon footprint is danger to average global temperatures" + "\n" +
+                                      "Your total travel carbon footprint passes average global carbon footprint (4 tons) dangerously." + "\n" +
+                                      "If you go that way, you will be responsible for catastrophic 2 degree rise of average global" + "\n" +
+                                      "temperatures. We should not forget that our carbon footprint,which we create almost every" + "\n" +
+                                      "step of the way, directly causes irreversible and irreparable damage to the world we live in, to " + "\n" + 
+                                      "natural life and to our environment.";
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show("Application can not find this route's carbon footprint", "Carbonfootprint can not find", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                }
+                sdr.Close();
+                con.Close();
+            }
+            else
+            {
+                MessageBox.Show("Application can not find carbon footprint of your travel without both  of the airport information included" ,"Empty Airport imformation", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+
+            
+                    
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void footprint_Load(object sender, EventArgs e)
+        {
+            this.BackColor = Color.CadetBlue;
+            this.panel1.BackColor = Color.Turquoise;
+            this.label1.ForeColor = Color.WhiteSmoke;
+            this.label2.ForeColor = Color.WhiteSmoke;
+            this.label3.ForeColor = Color.WhiteSmoke;
+            this.label5.ForeColor = Color.CadetBlue;
+            this.label7.BackColor = Color.Turquoise;
+            this.label8.ForeColor = Color.CadetBlue;
+            this.label4.ForeColor = Color.WhiteSmoke;
+            this.label6.ForeColor = Color.WhiteSmoke;
+            this.button1.BackColor = Color.Turquoise;
+            this.button1.ForeColor = Color.WhiteSmoke;
+            this.button1.FlatStyle = FlatStyle.Flat;
+            this.label1.Text = "Welcome to Carbon Footprint of Air Travel App" + "\n" + "\n" + 
+                               "To find your air travel carbon footprint please choose" + "\n" +
+                               "departure airport information and arrival airport information.";
+            this.label8.Text = "Air travel has distinction of being the means of transportation" + "\n" +
+                               "that increses the carbon footprint most, depending on the distance" + "\n" +
+                               "to be travelled and the fuel to be spent";
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
