@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Doldurulacak form">
+    <title>İletişim Formu Sayfası</title>
+</head>
+
+<body>
+
+    <form method="POST">
+
+        İsim: <input type="text" name="isim" id="isim" placeholder="İsminizi giriniz">
+        <br> <br>
+        Soyisim: <input type="text" name="soyisim" id="soyisim" placeholder="Soyisminizi giriniz">
+        <br><br>
+        Sevdiğiniz Spor: <input type="checkbox" name="Futbol" id="Futbol">Futbol
+        <input type="checkbox" name="Basketbol" id="Basketbol">Basketbol
+        <input type="checkbox" name="Voleybol" id="Voleybol">Voleybol
+        <br><br>
+        Cinsiyet: <input type="radio" name="gender" id="radioErkek" value="Erkek">Erkek
+        <input type="radio" name="gender" id="radioKadın" value="Kadın">Kadın
+        <br><br>
+        <strong>Güvenlik sorusu: Türkiye'nin Başkenti neresidir?</strong>
+        <br> <br>
+        <select name="guvenlikSorusu" id="guvenlikSorusu">
+            <option value="bos">Lütfen bir cevap seçiniz</option>
+            <option value="Rize">Rize</option>
+            <option value="Ankara">Ankara</option>
+            <option value="Elazıg">Elazığ</option>
+            <option value="Izmir">İzmir</option>
+        </select>
+        <br><br>
+        <input type="submit" value="Kayıt Ol">
+
+
+    </form>
+
+
+</body>
+
+</html>

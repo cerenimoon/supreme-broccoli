@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hakkımda</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+    <style>
+       p{
+           background: red;
+           text-align: center;
+           color: yellow;
+           padding: 10px;
+           cursor: pointer;
+       }
+       div{
+           background: blue;
+           color: white;
+           white-space: pre;
+       }
+    </style>
+</head>
+<body>
+  
+    <p>slide up</p>
+    <p>slide down</p>
+    <p>slide toogle</p>
+
+    <div>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Non, laboriosam?
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sunt, nesciunt!
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, error?   
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos
+         voluptatem animi aperiam quidem provident tempore omnis quibusdam, 
+        nihil placeat repellendus voluptates molestiae fuga minus amet
+         cupiditate ipsa ex minima in.
+    </div>
+
+    <script>
+        $(function(){
+            $("p").eq(0).click(function(){
+                $("div").slideUp(3000);
+            });
+            $("p").eq(1).click(function(){
+                $("div").slideDown(3000);
+            });
+            $("p").eq(2).click(function(){
+                $("div").slideToggle(3000);
+            });
+        });
+      
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+body{
+    font-family: 'Courier New', Courier, monospace;
+}
+div{
+    width: 100%;
+    height: 300px;
+    text-align: center;
+    color:tomato;
+}
+#Ceremony{
+    font-family: 'Times New Roman', Times, serif;
+    background-image: url("img/Screenshot_2018-11-27-20-52-03.png");
+    background-size: 100% 300px;
+}
+.CeremonyYazi{
+    display: block;
+    font-size: 20px;
+    text-shadow: 0px 0px 1px black;
+    background-color: green;
+}
+.ceremonyInc{
+    float: left;
+    width: 100%;
+    font-weight: bold;
+}
+.corp{
+    padding-top: 10px;
+    width: 33.33%;
+    float: left;
+}
+.corp:nth-child(1){
+    background: url("img/yash-garg-WSTF1QEUUWw-unsplash.jpg") no-repeat;
+    background-size: 100% 350px;
+}
+.corp:nth-child(1){
+    color:cornflowerblue;
+}
+.corp:nth-child(2){
+    background: url("img/IMG-20181122-WA0002.jpg");
+    background-size: 100% 350px;
+}
+.corp:nth-child(2){
+    color: cyan;
+}
+.corp:nth-child(3){
+    background: url("img/20180520_082516.jpg");
+    background-size: 100% 350px;
+}
+.corp:nth-child(3){
+    color: darkorchid;
+}
+#About{
+    clear:both;
+    background-color: tomato;
+    background-size: 650px;
+    color:black;        
+}
+#About img{
+    width: 200px;
+    height: 200px;
+    border: 5px dashed black;
+    margin-top: 10px;
+}
+#About p{
+    white-space: pre-line;
+    text-transform: capitalize;
+}
+
+@media screen and (max-width: 992px){
+    .corp{
+        width: 100%;
+    }
+    #About{
+        margin-top: 900px;
+        height: 360px;
+    }
+    #About img{
+       margin-top: 40px;
+    }
+}

@@ -1,0 +1,23 @@
+p{
+    font-family: 'David Libre', serif;
+    font-style: italic;
+    font-weight: normal;
+    font-weight: bolder;
+    font-weight: initial; 
+    font-weight: lighter;
+    font-weight: bold;
+}
+
+div{
+    font-weight: 100px;
+}
+.p1{
+    font-family: 'Roboto', sans-serif;
+    font-weight: inherit;
+}
+
+
+.div1{
+    font-style: italic;
+    font-weight: lighter;
+}

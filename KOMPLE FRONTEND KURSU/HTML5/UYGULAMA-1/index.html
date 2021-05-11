@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name= "title" content= "İletişim Sayfası">
+    <meta name="description" content="paranızı güvende tutar">
+    <meta name="keywords" content="kredi çekme,havale,faiz">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+    <title>Hakkında</title>
+    <style>
+        .listeElemani{
+            margin-left: 10px;
+            background: white;
+            color: red;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+    
+</head>
+<body>
+    <h1>Yapılacaklar Listesi</h1>
+    <input type="text" placeholder="yeni bir yapılacak">
+    <button id="eklemeButonu">Ekle</button>
+    <ol id="Listemiz"></ol>
+
+    <script>
+        $(function(){
+            $("#eklemeButonu").on("click", function(){
+                var inputDeger = $("input").val();
+                if(inputDeger!=""){
+                    var listItem = $("<li></li>").text(inputDeger);
+                    $(listItem).append("<button class=\"listeElemani\">X</button>");
+                    $("#Listemiz").append(listItem);
+                    $("input").val("");
+                    $(".listeElemani").on("click", function(){
+                        $(this).parent().remove();
+                    });
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>

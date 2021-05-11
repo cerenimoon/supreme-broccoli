@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        img{
+            height: 50%;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <!--<div>
+        <button onclick="oncekiFoto()">Önceki</button>
+        <img id="slider" src="img/Bojo.jpg" alt="Resim bulunamadı">
+        <button onclick="sonrakiFoto()">Sonraki</button>
+    </div>-->
+
+    <!--<form onsubmit="return sifreDogrula()">
+        <input name="password" type="password" value="Şifrenizi giriniz...">
+        <br>
+        <input name="repassword" type="password" value="Şifrenizi tekrar giriniz...">
+        <br>
+        <input type="submit" value="Gönder">
+    </form>-->
+
+    
+</body>
+
+<script>
+    /*var resimler = [
+        "img/Bojo.jpg",
+        "img/Bojo2.jpg",
+        "img/bojo3.png"
+    ];
+
+    var indexnow = 0;
+    function oncekiFoto(){
+        var slider = document.getElementById("slider");
+        indexnow --;
+        if(indexnow < 0){
+            indexnow = resimler.length - 1;
+        }
+        slider.src = resimler[indexnow];
+    }
+    function sonrakiFoto(){
+        var slider = document.getElementById("slider");
+        indexnow++;
+        if(indexnow >= resimler.length){
+            indexnow = 0;
+        }
+        slider.src = resimler[indexnow];
+    }*/
+
+        /*function sifreDogrula(){
+            var pass= document.getElementsByName("password")[0];
+            var repass = document.getElementsByName("repassword")[0];
+
+            if(pass.value != "" && repass.value != ""){
+                if(pass.value == repass.value){
+                    alert("Kaydınız tamamlandı");
+                    return true;
+                }
+            }
+            else{
+                alert("Lütfen boş yerleri doldurunuz");
+            }
+
+            alert("Girilen şifreler eşleşmedi");
+            return false;
+       }*/
+
+       //var giris = prompt("Lütfen mesajınızı giriniz");
+
+       function clock(){ 
+            var tarih = new Date();
+            var year = tarih.getFullYear();
+            var month = tarih.getMonth();
+            var hour = tarih.getHours();
+            var minute = tarih.getMinutes();
+            var seconds = tarih.getSeconds();
+
+            document.body.innerHTML = hour + ":" + minute + ":" + seconds;
+       }
+
+       //document.write(Math.round(10*Math.random()));
+       //document.write(Math.);
+    setInterval(clock, 1000);
+
+</script>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=s">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+    <title>JQuery</title>
+    <style>
+        div{
+            height: 300px;
+            width: 300px;
+            background: red;
+            text-align: center;
+        }
+        p{
+            height: 200px;
+            width: 200px;
+            background: yellow;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        parent
+        <p>
+            Çocuk
+        </p>
+    </div>
+    <script>
+        /*
+        $("div").click(function(event){
+            $("div").text(event.pageX + " " + event.pageY);
+        });*/
+        /*
+        $("div").mouseenter(function(event){
+            $("div").text(event.type);
+        });*/
+        /*
+        $("button").eq(0).click({deger:0}, function(event){
+            $("div").text(event.data.deger);
+        });
+        $("button").eq(1).click({deger:1}, function(event){
+            $("div").text(event.data.deger);
+        });
+        $("button").eq(2).click({deger:2}, function(event){
+            $("div").text(event.data.deger);
+        });*/
+        /*
+        $("div").click(function(event){
+            $("div").text(event.target.nodeName); //tıkladığımız şey div dir
+        });
+
+        $("button").eq(0).click(function(event){
+            $("div").text(event.target.nodeName);
+        });*/
+        /*$("a").click(function(event){
+            //$("div").text(event.type);
+            $("div").text(event.target.nodeName);
+            event.preventDefault();
+        });*/
+        /*
+        $("p").click(function(){
+            alert("Çocuk");
+            event.stopPropagation();
+        });
+        $("div").click(function(){
+            alert("parent");
+        })*/
+        $("p").click(function(){
+            $("p").parent().html("çocuğa tıklandı");
+        });
+
+        setTimeout(function(){  
+            $("p").trigger("click");
+        }, 3000);
+    </script>
+</body>
+</html>

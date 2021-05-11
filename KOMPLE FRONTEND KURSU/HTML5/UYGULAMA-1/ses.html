@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ses müzik hareket">
+    <meta name="keywords" content="ses macera hareket">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ==" crossorigin="anonymous"></script> 
+    <style>
+        div{
+            background: turquoise;
+            height: 100px;
+            width: 100px;
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        
+    </div>
+    
+    <script>
+
+        var div = $("div");
+        div.animate({opacity: 1}, 1000);
+        setInterval(() => {
+            div.animate({
+                    height: '+=100px',
+                    width: '+=100px',
+                    top: '+=100px'
+                }, 1000);
+            div.animate({
+                    height: '-=100px',
+                    width: '-=100px',
+                    top: '-=100px'
+            })
+       }, 1000);
+        /*
+        $(function(){
+            $("div").click(function(){
+                $(this).text($(this).width() + "" + $(this).height());
+                $(this).animate({
+                    width: '+=50px',
+                    height: '+=50px'
+                }, 1000);
+            });
+        });
+        /*
+        var x = 0;
+        $("div").animate({
+            width: '105px',
+            background: 'yellow',
+            fontSize: '30px'
+        }, 25000);
+
+        function yuklemeMiktari(){
+            x++;
+            if(x>=100){
+                clearInterval(yuklenmeOrani);
+            }
+            $("div").text(x);
+        }
+        var yuklenmeOrani = setInterval(yuklemeMiktari, 250);
+        /*
+        setTimeout(() => {
+            x++;
+            $("div").text(x);
+        }, 500)*/
+    </script>
+</html>
