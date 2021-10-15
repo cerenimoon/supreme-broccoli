@@ -1,3 +1,3 @@
 # supreme-broccoli
 
-C#, Flutter projects 
+C#, Flutter, Python , CSS/HTML Projects 
