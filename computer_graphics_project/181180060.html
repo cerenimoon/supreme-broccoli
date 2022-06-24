@@ -1,60 +1,36 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <script id="vertex-shader" type="x-shader/x-vertex">
-        attribute vec3 pos;
-        void main(){
-            gl_Position = vec4(pos, 2.0);
-        }
-    </script>
-    <script id="fragment-shader" type="x-shader/x-fragment">
-        precision mediump float;
-        uniform vec2 u_resolution;
+<canvas id="canvas" width="900" height="500" style="background-color: black ;"></canvas> <!--canvas with black background-->
+<!-- vertex shader -->
+<script  id="vertex-shader-3d" type="x-shader/x-vertex">
+attribute vec4 a_position;
+attribute vec4 a_color;
 
-        void main(){
-            vec2 st = gl_FragCoord.xy/u_resolution;
-            gl_FragColor = vec4(0.2, 0.3, 0.6, 1);
-        }
-    </script>
-    <script id="vertex-shader-sun" type="x-shader/x-vertex">
-        attribute vec3 posSun;
-        void main(){
-            gl_Position = vec4(posSun, 2.0);
-        }
-    </script>
-    <script id="fragment-shader-sun" type="x-shader/x-fragment">
-        precision mediump float;
-        uniform vec2 sun_resolution;
+uniform mat4 u_matrix;
 
-        void main(){
-            vec2 st = gl_FragColor.xy/sun_resolution;
-            gl_FragColor = vec4(1.0, 0.64, 0.0, 1.0);
-        }
-    </script>
-    <script id="vertex-shader-moon" type="x-shader/x-vertex">
-        attribute vec3 posMo;
-        void main(){
-            gl_Position = vec4(posMo, 2.0);
-        }
-    </script>
-    <script id="fragment-shader-moon" type="x-shader/x-fragment">
-        precision mediump float;
-        uniform vec2 moon_resolution;
+varying vec4 v_color;
 
-        void main(){
-            vec2 st = gl_FragColor.xy/moon_resolution;
-            gl_FragColor = vec4(1.0,1.0, 0.6, 1.0);
-        }
-    </script>
-   
-    <script type="text/javascript" src="common/webgl-utils.js"></script>
-    <script type="text/javascript" src="common/initShaders.js"></script>
-    <script type="text/javascript" src="common/MV.js"></script>
-    <script type="text/javascript"src="181180060.js"></script>
-</head>
-    <body>
-        <button id="earth-move">Move the earth</button>
-        <canvas id="gl-canvas" width="850" height="850"> 
-        </canvas>   
-    </body>
-</html>
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = u_matrix * a_position;
+
+  // Pass the color to the fragment shader.
+  v_color = a_color;
+}
+</script>
+<!-- fragment shader -->
+<script  id="fragment-shader-3d" type="x-shader/x-fragment">
+precision mediump float;
+
+// Passed in from the vertex shader.
+varying vec4 v_color;
+
+uniform vec4 u_colorMult;
+
+void main() {
+   gl_FragColor = v_color * u_colorMult;
+}
+</script>
+<script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script> <!--webgl utils-->
+<script src="https://webglfundamentals.org/webgl/resources/m4.js"></script> <!--webgl m4 resources-->
+<script src="https://webglfundamentals.org/webgl/resources/primitives.js"></script> <!--webgl primitives-->
+<script src="181180060.js"></script> <!--webgl js script-->
+<!--we use webglfundamental references-->

@@ -1,179 +1,205 @@
-var numberOfTriangles = 60;
-window.onload = function init(){
-    var canvas = document.getElementById('gl-canvas');
-    // define WebGLRenderingContext
-    //// getContext(context, options)
-    var gl = canvas.getContext('experimental-webgl');
-  
-    // Specify the color values used when clearing color buffers.
-    //// gl.clearColor(red, green, blue, alpha)
-    gl.clearColor(0.0, 0.0, 0.0, 1.0); //clear background as black 
-  
-    // clears buffers to preset values specified by clearColor(), clearDepth() and clearStencil().
-    //// gl.clear(gl.COLOR_BUFFER_BIT || gl.DEPTH_BUFFER_BIT || gl.STENCIL_BUFFER_BIT)
-    gl.clear(gl.COLOR_BUFFER_BIT);
-  
-    var programGL = gl.createProgram();
-    var program_sun = gl.createProgram();
-    var program_moon = gl.createProgram();
-  
-    // time to throw some shade
-    var vertexShaderScript = document.getElementById('vertex-shader').text;
-    var fragmentShaderScript = document.getElementById('fragment-shader').text;
-    var sun_vertexShaderScript = document.getElementById('vertex-shader-sun').text;
-    var sun_fragmentShaderScript = document.getElementById('fragment-shader-sun').text;
-    var moon_vertexShaderScript = document.getElementById('vertex-shader-moon').text;
-    var moon_fragmentShaderScript = document.getElementById('fragment-shader-moon').text;
-  
-  
-    // gl.createShader(gl.VERTEX_SHADER || gl.FRAGMENT_SHADER)
-    var vertexShader   = gl.createShader(gl.VERTEX_SHADER);
-    var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-    var sun_vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    var sun_fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-    var moon_vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    var moon_fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-    //var shadow_vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    //var shadow_fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-  
-    // gl.shaderSource(shader, source)
-    gl.shaderSource(vertexShader, vertexShaderScript);
-    gl.shaderSource(fragmentShader, fragmentShaderScript);
-    //gl.shaderSource(moon_fragmentShader, moon_fragmentShaderScript);
-    //gl.shaderSource(moon_vertexShader, )
+"use strict";
 
-  
-    // gl.compileShader(shader)
-    gl.compileShader(vertexShader);
-    gl.compileShader(fragmentShader);
-    //gl.compileShader(moon_fragmentShader);
+function main() {
+  // Get A WebGL context
+  /** @type {HTMLCanvasElement} */
+  var canvas = document.querySelector("#canvas");
+  var gl = canvas.getContext("webgl");
+  if (!gl) {
+    return;
+  }
 
-  
-    // gl.attachShader(webgl program, shader)
-    gl.attachShader(programGL, vertexShader);
-    gl.attachShader(programGL, fragmentShader);
-    //gl.attachShader(programGL, moon_fragmentShader);
+  // create earth, sun and moon buffer information
+  const sphereBufferInfo = primitives.createSphereWithVertexColorsBufferInfo(gl, 7, 360, 160); //earth sphere
+  const sunBufferInfo   = primitives.createSphereWithVertexColorsBufferInfo(gl, 20, 360, 160); //sun sphere
+  const moonBufferInfo   = primitives.createSphereWithVertexColorsBufferInfo(gl, 3, 360, 160); //moon sphere
+  var circle_rotation = 0; //earth rotation
+  var earth_ro_x = 50; //earth x
+  var earth_ro_z = 50; //earth z
+  var moon_ro_x = 0.95; //moon x
+  var moon_ro_z = 0; //moon z
+  var circle_moon_ro = 0; //moon rotation
+  // setup GLSL program
+  var programInfo = webglUtils.createProgramInfo(gl, ["vertex-shader-3d", "fragment-shader-3d"]);
 
-  
-    gl.linkProgram(programGL);
-    gl.useProgram(programGL);
-    //gl.linkProgram(program_sun);
-    //gl.useProgram(program_sun);
-  
-    var triangleAttributePosition = gl.getAttribLocation(programGL, 'pos'); //position of earth triangle 
-    var sunAttribPosition = gl.getAttribLocation(program_sun, 'posSun'); //programGL
-    var moonAttribPosition = gl.getAttribLocation(program_moon, 'posMo');
-  
-    // set the resolution
-    var resolutionLocation = gl.getUniformLocation(programGL, 'u_resolution');
-    gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
-    var resolutionLocationSun = gl.getUniformLocation(program_sun, 'sun_resolution');
-    gl.uniform2f(resolutionLocationSun, canvas.width, canvas.height);
-    var resolutionLocationMoon = gl.getUniformLocation(programGL, 'moon_resolution');
-    //gl.uniform2f(resolutionLocationMoon);
-  
-    var vertices = []; //earth vertices 
-  
-    //var numberOfTriangles = 60;
-    var degreesPerTriangle = (4 * Math.PI) / numberOfTriangles;
-    var centerX = 0.0; //0.7
-  
-    for(var i = 0; i < numberOfTriangles; i++) {
-        var index = i * 3;
-        var angle = degreesPerTriangle * i;
-        var scale = 4;
-  
-        vertices[index] = (Math.cos(angle) / scale) + 1.35;               // x
-        vertices[index + 1] = Math.sin(angle) / scale + centerX; // y
-        vertices[index + 2] = 0;                                 // z
+  function degToRad(d) {
+    return d * Math.PI / 180;
+  }
+
+  var cameraAngleRadians = degToRad(0);
+  var fieldOfViewRadians = degToRad(60);
+  var cameraHeight = 50;
+  //var cameraVal = degToRad(0);
+  var radius = 120; //backward radius
+  var viewport_x_ro = 0; //viewport value 
+
+  // earth sun and moon uniforms colors and matrix for each object.
+  var sphereUniforms = {
+    u_colorMult: [0.2, 0.3, 0.6, 1],
+    u_matrix: m4.identity(),
+  };
+  var sunUniforms = {
+    u_colorMult: [1, 0.65, 0.0, 1],
+    u_matrix: m4.identity(),
+  };
+  var moonUniforms = {
+    u_colorMult: [1.0, 1.0, 0.6, 1],
+    u_matrix: m4.identity(),
+  };
+  var sphereTranslation = [50, 0, 0]; //earth translation
+  var sunTranslation   = [0, 0, 0]; //sun translation
+  var moonTranslation   = [ 60, 0, 0]; //moon translation
+
+  function computeMatrix(viewProjectionMatrix, translation, xRotation, yRotation) {
+    var matrix = m4.translate(viewProjectionMatrix,
+        translation[0], //x translation
+        translation[1], //y translation
+        translation[2]); //z translation
+    matrix = m4.xRotate(matrix, xRotation);
+    return m4.yRotate(matrix, yRotation); //rotation
+  }
+
+  requestAnimationFrame(drawSolar); //drawSolar
+
+  document.addEventListener('keydown', function(event) {
+    if(event.code == 'KeyW'){
+      radius -= 5; //zoom out backward
+      drawSolar();
     }
-  
-  
-    var verticesFloatArray = new Float32Array(vertices);
-    var bufferId = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
-    gl.bufferData(gl.ARRAY_BUFFER, verticesFloatArray, gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(triangleAttributePosition);
-    gl.vertexAttribPointer(triangleAttributePosition, 3, gl.FLOAT, false, 0, 0); //draw earth triangulation
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, numberOfTriangles - 5);
-
-
-
-    gl.shaderSource(sun_vertexShader, sun_vertexShaderScript); //add shader sources
-    gl.shaderSource(sun_fragmentShader, sun_fragmentShaderScript);
-    gl.compileShader(sun_vertexShader); //compile shaders
-    gl.compileShader(sun_fragmentShader);
-    gl.attachShader(program_sun, sun_vertexShader); //attach shaders 
-    gl.attachShader(program_sun, sun_fragmentShader);
-    gl.linkProgram(program_sun);
-    gl.useProgram(program_sun);
-  
-    var vertices2 = []; //sun vertices
-  
-    var numOfTriSun = 60;
-    var degreesPerTriangleS = (4*Math.PI)/numberOfTriangles;
-    var centerS = 0.0; //center
-  
-    for(var i = 0; i < numberOfTriangles; i++){
-        var index = i*3;
-        var angle = degreesPerTriangle * i;
-        var scale = 2;
-  
-        vertices2[index] = (Math.cos(angle)/scale) - 0.1; //x coordinate
-        vertices2[index + 1] = Math.sin(angle) / scale + centerS; //y coordinate
-        vertices2[index + 2] = 0; //z coordinate
+    else if(event.code == 'KeyS'){
+      radius += 5; //zoom in backward
+      drawSolar();
     }
-  
-  
-    var verticesFloatArray2 = new Float32Array(vertices2); //create the sun 
-  
-    var bufferId2 = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bufferId2);
-    gl.bufferData(gl.ARRAY_BUFFER, verticesFloatArray2, gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(sunAttribPosition);
-    gl.vertexAttribPointer(sunAttribPosition, 3, gl.FLOAT, false, 0, 0);
-  
-    // drawArrays(primatitve shape, start index, number of values to be rendered)
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, numberOfTriangles - 5)  
+    else if(event.code == 'KeyA'){
+      viewport_x_ro -= 5;
+      drawSolar(); //left
+    }
+    else if(event.code == 'KeyD'){
+      viewport_x_ro += 5; //right
+      drawSolar();
+    }
+  })
 
-    gl.shaderSource(moon_vertexShader, moon_vertexShaderScript);
-    gl.shaderSource(moon_fragmentShader, moon_fragmentShaderScript);
-    gl.compileShader(moon_vertexShader);
-    gl.compileShader(moon_fragmentShader);
-    gl.attachShader(program_moon, moon_vertexShader);
-    gl.attachShader(program_moon, moon_fragmentShader);
-    gl.linkProgram(program_moon);
-    gl.useProgram(program_moon);
+  // Draw the scene.
+  function drawSolar(time) {
+    time *= 0.0005; //time frames 
 
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
-    var vertices3 = []; //moon vertices 
+    //set the viewport
+    gl.viewport(viewport_x_ro, 0, gl.canvas.width, gl.canvas.height);
 
-    var centerM = 0.0; //0.7 
+    gl.enable(gl.CULL_FACE); //depth cull
+    gl.enable(gl.DEPTH_TEST); //cull depth test 
 
-    for(var i = 0; i < numberOfTriangles; i++){
-        var index = i*3;
-        var angle = degreesPerTriangle*i;
-        var scale = 12;
+    //set the depth buffer
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        vertices3[index] = (Math.cos(angle)/scale) + 0.85;
-        vertices3[index + 1] = Math.sin(angle)/ scale + centerM;
-        vertices3[index + 2] = 0;  
+    //set the projection matrix
+    var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    var projectionMatrix =
+        m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
+
+    // Compute the camera's matrix using look at.
+    //var cameraPosition = [0, 0, 100];
+    //var target = [0, 0, 0];
+    //var up = [0, 1, 0];
+    //var cameraMatrix = m4.lookAt(cameraPosition, target, up);
+    var cameraMatrix = m4.yRotation(cameraAngleRadians); //set camera matrix
+    cameraMatrix = m4.translate(cameraMatrix, 0, 0, radius*1.5); //m4 translate
+    // Make a view matrix from the camera matrix.
+    var viewMatrix = m4.inverse(cameraMatrix);
+
+    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix); //set viewMatrix 
+
+    //set the rotations for earth and moon circles 
+    if(circle_rotation <= 360){
+      var i = circle_rotation*Math.PI / 180;
+      earth_ro_x = Math.cos(i)*50 - 0.765;
+      earth_ro_z = Math.sin(i)*50;
+      sphereTranslation[0] = earth_ro_x;
+      sphereTranslation[1] = 0;
+      sphereTranslation[2] = earth_ro_z;
+      circle_rotation += 0.05*30;
+    }
+    else{
+      circle_rotation = 0;
+      sphereTranslation[0] = earth_ro_x;
+      sphereTranslation[1] = 0;
+      sphereTranslation[2] = earth_ro_z;
     }
 
-    var moonArray = new Float32Array(vertices3); //moon vertices
+    if(circle_moon_ro <= 360){
+      var j = circle_moon_ro*Math.PI/180;
+      moon_ro_x = (earth_ro_x + (Math.cos(j)*20)) - 3;
+      moon_ro_z = earth_ro_z + (Math.sin(j)*20);
+      moonTranslation[0] = moon_ro_x;
+      moonTranslation[1] = 0;
+      moonTranslation[2] = moon_ro_z;
+      circle_moon_ro += 0.05*60;
+    }
+    else{
+      circle_moon_ro = 0;
+      moonTranslation[0] = moon_ro_x;
+      moonTranslation[1] = 0;
+      moonTranslation[2] = moon_ro_z;
+    }
 
-    var bufferId3 = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bufferId3);
-    gl.bufferData(gl.ARRAY_BUFFER, moonArray, gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(moonAttribPosition);
-    gl.vertexAttribPointer(moonAttribPosition, 3, gl.FLOAT, false, 0, 0);
-  
-    // drawArrays(primatitve shape, start index, number of values to be rendered)
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, numberOfTriangles - 5)     
-    
-};
+    var sphereXRotation =  time; //rotate earth
+    var sphereYRotation =  time; //rotate earth
+    var sunXRotation   = -time; //rotate sun
+    var sunYRotation   =  time; //rotate sun
+    var moonXRotation   =  time; //rotate moon
+    var moonYRotation   = -time; //rotate moon 
 
-function render(){
-    
+    gl.useProgram(programInfo.program); //program information 
+
+    // set up earth
+    webglUtils.setBuffersAndAttributes(gl, programInfo, sphereBufferInfo); //earth sphere 
+
+    sphereUniforms.u_matrix = computeMatrix(
+        viewProjectionMatrix,
+        sphereTranslation,
+        sphereXRotation,
+        sphereYRotation);
+
+    // set up earth uniforms
+    webglUtils.setUniforms(programInfo, sphereUniforms);
+
+    gl.drawArrays(gl.TRIANGLES, 0, sphereBufferInfo.numElements);
+
+
+    // set up sun uniform 
+    webglUtils.setBuffersAndAttributes(gl, programInfo, sunBufferInfo);
+
+    sunUniforms.u_matrix = computeMatrix(
+        viewProjectionMatrix,
+        sunTranslation,
+        sunXRotation,
+        sunYRotation);
+
+    // Set the sun uniforms
+    webglUtils.setUniforms(programInfo, sunUniforms);
+
+    gl.drawArrays(gl.TRIANGLES, 0, sunBufferInfo.numElements);
+
+
+    // set up moon
+    webglUtils.setBuffersAndAttributes(gl, programInfo, moonBufferInfo);
+
+    moonUniforms.u_matrix = computeMatrix(
+        viewProjectionMatrix,
+        moonTranslation,
+        moonXRotation,
+        moonYRotation);
+
+    // set up moon uniforms 
+    webglUtils.setUniforms(programInfo, moonUniforms);
+
+    gl.drawArrays(gl.TRIANGLES, 0, moonBufferInfo.numElements);
+
+    requestAnimationFrame(drawSolar);
+  }
 }
-  
+
+main(); //main function
