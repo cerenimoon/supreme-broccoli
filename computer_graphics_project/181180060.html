@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec3 pos;
+        void main(){
+            gl_Position = vec4(pos, 2.0);
+        }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec2 u_resolution;
+
+        void main(){
+            vec2 st = gl_FragCoord.xy/u_resolution;
+            gl_FragColor = vec4(0.2, 0.3, 0.6, 1);
+        }
+    </script>
+    <script id="vertex-shader-sun" type="x-shader/x-vertex">
+        attribute vec3 posSun;
+        void main(){
+            gl_Position = vec4(posSun, 2.0);
+        }
+    </script>
+    <script id="fragment-shader-sun" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec2 sun_resolution;
+
+        void main(){
+            vec2 st = gl_FragColor.xy/sun_resolution;
+            gl_FragColor = vec4(1.0, 0.64, 0.0, 1.0);
+        }
+    </script>
+    <script id="vertex-shader-moon" type="x-shader/x-vertex">
+        attribute vec3 posMo;
+        void main(){
+            gl_Position = vec4(posMo, 2.0);
+        }
+    </script>
+    <script id="fragment-shader-moon" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec2 moon_resolution;
+
+        void main(){
+            vec2 st = gl_FragColor.xy/moon_resolution;
+            gl_FragColor = vec4(1.0,1.0, 0.6, 1.0);
+        }
+    </script>
+   
+    <script type="text/javascript" src="common/webgl-utils.js"></script>
+    <script type="text/javascript" src="common/initShaders.js"></script>
+    <script type="text/javascript" src="common/MV.js"></script>
+    <script type="text/javascript"src="181180060.js"></script>
+</head>
+    <body>
+        <button id="earth-move">Move the earth</button>
+        <canvas id="gl-canvas" width="850" height="850"> 
+        </canvas>   
+    </body>
+</html>
