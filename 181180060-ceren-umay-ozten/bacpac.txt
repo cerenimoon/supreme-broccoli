@@ -1,0 +1,4 @@
+odtuDB bacpac is 'odtuUniDB' database schema
+and data features in a whole.
+odtuDB bacpac is special for Microsoft SQL Server Studio 
+ 
